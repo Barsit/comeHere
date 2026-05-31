@@ -1,0 +1,14 @@
+# Go binary
+comehere.exe
+*.exe
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# docs (not part of the project)
+docs/
