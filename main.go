@@ -14,9 +14,21 @@ import (
 	"github.com/db/comehere/internal/api"
 	"github.com/db/comehere/internal/certmgr"
 	"github.com/db/comehere/internal/config"
+	"github.com/db/comehere/internal/elevate"
 	"github.com/db/comehere/internal/hostsmgr"
 	"github.com/db/comehere/internal/proxy"
 )
+
+func init() {
+	if !elevate.IsAdmin() {
+		fmt.Println("需要管理员权限，正在请求提权...")
+		if err := elevate.RestartElevated(); err != nil {
+			fmt.Printf("提权失败: %v\n", err)
+			fmt.Println("请手动以管理员身份运行此程序")
+		}
+		os.Exit(0)
+	}
+}
 
 //go:embed web/dist/*
 var webFS embed.FS
