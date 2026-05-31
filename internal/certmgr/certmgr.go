@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 )
@@ -21,9 +22,14 @@ type Manager struct {
 	caTLSCert *tls.Certificate
 }
 
-// execCommand 可被测试 mock
+// execCommand 运行系统命令，可被测试 mock 替换
 var execCommand = func(name string, arg ...string) error {
-	return fmt.Errorf("not implemented: %s %v", name, arg)
+	cmd := exec.Command(name, arg...)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s: %w\n%s", name, err, string(out))
+	}
+	return nil
 }
 
 func New(configDir string) *Manager {
